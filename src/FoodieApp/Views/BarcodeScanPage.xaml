@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FoodieApp.ViewModels"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             xmlns:converters="clr-namespace:FoodieApp.Converters"
+             x:Class="FoodieApp.Views.BarcodeScanPage"
+             x:DataType="vm:BarcodeScanViewModel"
+             Title="{Binding Title}"
+             AutomationProperties.Name="Barcode scanner page">
+
+    <ContentPage.Resources>
+        <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <converters:ScanButtonTextConverter x:Key="ScanButtonTextConverter" />
+        <converters:CountToBoolConverter x:Key="CountToBoolConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="*,Auto" Padding="16" RowSpacing="16">
+
+        <!-- Main Content Area -->
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="20">
+
+                <!-- Scanning Area -->
+                <Border Style="{StaticResource CardStyle}"
+                        Padding="0"
+                        HeightRequest="280"
+                        AutomationProperties.Name="Barcode scanning area">
+                    <Grid>
+                        <!-- Camera View (shown when scanning) -->
+                        <zxing:CameraBarcodeReaderView
+                            x:Name="BarcodeReader"
+                            IsVisible="{Binding IsScanning}"
+                            IsDetecting="True"
+                            BarcodesDetected="CameraBarcodeReaderView_BarcodesDetected"
+                            AutomationProperties.Name="Camera barcode reader" />
+
+                        <!-- Scan Placeholder -->
+                        <Border IsVisible="{Binding IsScanning, Converter={StaticResource InverseBoolConverter}}"
+                                BackgroundColor="{StaticResource Gray100}">
+                            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                                <Label Text="📷"
+                                       FontSize="64"
+                                       HorizontalOptions="Center" />
+                                <Label Text="Tap 'Start Scanning' to scan a barcode"
+                                       FontSize="16"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Scan Controls -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Button Grid.Column="0"
+                            Text="{Binding IsScanning, Converter={StaticResource ScanButtonTextConverter}}"
+                            Command="{Binding StartScanningCommand}"
+                            IsVisible="{Binding IsScanning, Converter={StaticResource InverseBoolConverter}}"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            AutomationProperties.Name="Start barcode scan" />
+                    <Button Grid.Column="1"
+                            Text="Stop"
+                            Command="{Binding StopScanningCommand}"
+                            IsVisible="{Binding IsScanning}"
+                            BackgroundColor="{StaticResource Error}"
+                            TextColor="White"
+                            AutomationProperties.Name="Stop barcode scan" />
+                </Grid>
+
+                <!-- Manual Entry -->
+                <Border Style="{StaticResource CardStyle}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Or Enter Barcode Manually"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               AutomationProperties.HeadingLevel="Level2" />
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <Entry Grid.Column="0"
+                                   Text="{Binding ManualBarcode}"
+                                   Placeholder="Enter barcode number..."
+                                   Keyboard="Numeric"
+                                   ReturnType="Search"
+                                   ReturnCommand="{Binding LookupManualBarcodeCommand}"
+                                   AutomationProperties.Name="Manual barcode input"
+                                   AutomationProperties.Hint="Type a barcode number to look up product information" />
+                            <Button Grid.Column="1"
+                                    Text="Lookup"
+                                    Command="{Binding LookupManualBarcodeCommand}"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    AutomationProperties.Name="Lookup barcode" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Error -->
+                <Border IsVisible="{Binding HasError}"
+                        BackgroundColor="{StaticResource ErrorLight}"
+                        Style="{StaticResource CardStyle}">
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="{StaticResource Error}"
+                           FontSize="14" />
+                </Border>
+
+                <!-- Product Result -->
+                <Border IsVisible="{Binding HasScanned}"
+                        Style="{StaticResource CardStyle}"
+                        AutomationProperties.Name="Scanned product result">
+                    <VerticalStackLayout Spacing="12" IsVisible="{Binding HasScanned}">
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Product Information"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   AutomationProperties.HeadingLevel="Level2" />
+                            <Button Grid.Column="1"
+                                    Text="Clear"
+                                    Command="{Binding ClearResultCommand}"
+                                    FontSize="12"
+                                    HeightRequest="34"
+                                    BackgroundColor="{StaticResource Gray300}"
+                                    TextColor="{StaticResource Gray800}" />
+                        </Grid>
+
+                        <!-- Product Name -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Product Name"
+                                   FontSize="13"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Label Text="{Binding ScannedProduct.ProductName}"
+                                   FontSize="20"
+                                   FontAttributes="Bold" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Brand"
+                                   FontSize="13"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Label Text="{Binding ScannedProduct.Brand}"
+                                   FontSize="16" />
+                        </VerticalStackLayout>
+
+                        <!-- Nutrition -->
+                        <Label Text="Nutrition (per 100g/ml)"
+                               FontSize="16"
+                               FontAttributes="Bold" />
+                        <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+                            <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource NutritionCardStyle}">
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding ScannedProduct.Nutrition.Calories, StringFormat='{0:F0}'}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center"
+                                           TextColor="{StaticResource Primary}" />
+                                    <Label Text="Calories"
+                                           FontSize="10"
+                                           HorizontalOptions="Center"
+                                           TextColor="{StaticResource Gray500}" />
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource NutritionCardStyle}">
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding ScannedProduct.Nutrition.ProteinGrams, StringFormat='{0:F1}g'}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center"
+                                           TextColor="{StaticResource Primary}" />
+                                    <Label Text="Protein"
+                                           FontSize="10"
+                                           HorizontalOptions="Center"
+                                           TextColor="{StaticResource Gray500}" />
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource NutritionCardStyle}">
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding ScannedProduct.Nutrition.FatGrams, StringFormat='{0:F1}g'}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center"
+                                           TextColor="{StaticResource Primary}" />
+                                    <Label Text="Fat"
+                                           FontSize="10"
+                                           HorizontalOptions="Center"
+                                           TextColor="{StaticResource Gray500}" />
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource NutritionCardStyle}">
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding ScannedProduct.Nutrition.CarbohydratesGrams, StringFormat='{0:F1}g'}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center"
+                                           TextColor="{StaticResource Primary}" />
+                                    <Label Text="Carbs"
+                                           FontSize="10"
+                                           HorizontalOptions="Center"
+                                           TextColor="{StaticResource Gray500}" />
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource NutritionCardStyle}">
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding ScannedProduct.Nutrition.SugarGrams, StringFormat='{0:F1}g'}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center"
+                                           TextColor="{StaticResource Primary}" />
+                                    <Label Text="Sugar"
+                                           FontSize="10"
+                                           HorizontalOptions="Center"
+                                           TextColor="{StaticResource Gray500}" />
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource NutritionCardStyle}">
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding ScannedProduct.Nutrition.SodiumMilligrams, StringFormat='{0:F0}mg'}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center"
+                                           TextColor="{StaticResource Primary}" />
+                                    <Label Text="Sodium"
+                                           FontSize="10"
+                                           HorizontalOptions="Center"
+                                           TextColor="{StaticResource Gray500}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+
+                        <!-- Ingredients -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Ingredients"
+                                   FontSize="16"
+                                   FontAttributes="Bold" />
+                            <Label Text="{Binding ScannedProduct.Ingredients, StringFormat='{0}'}"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray600}"
+                                   LineHeight="1.3" />
+                        </VerticalStackLayout>
+
+                        <!-- Allergens (shown if any) -->
+                        <VerticalStackLayout Spacing="4"
+                                             IsVisible="{Binding ScannedProduct.Allergens.Count, Converter={StaticResource CountToBoolConverter}}">
+                            <Label Text="Allergen Information"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Error}" />
+                            <HorizontalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding ScannedProduct.Allergens}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <Border Style="{StaticResource ChipStyle}"
+                                                BackgroundColor="{StaticResource ErrorLight}">
+                                            <Label Text="{Binding .}"
+                                                   FontSize="12"
+                                                   TextColor="{StaticResource Error}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Loading -->
+        <ActivityIndicator Grid.Row="0"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="{StaticResource Primary}"
+                           VerticalOptions="Center"
+                           AutomationProperties.Name="Looking up product" />
+
+    </Grid>
+
+</ContentPage>

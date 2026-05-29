@@ -1,0 +1,12 @@
+global using System.Collections.ObjectModel;
+global using System.ComponentModel;
+global using System.Runtime.CompilerServices;
+global using System.Windows.Input;
+global using CommunityToolkit.Mvvm.ComponentModel;
+global using CommunityToolkit.Mvvm.Input;
+global using FoodieApp.Models;
+global using FoodieApp.Services;
+global using FoodieApp.ViewModels;
+global using FoodieApp.Views;
+global using FoodieApp.Converters;
+global using FoodieApp.Helpers;

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FoodieApp.ViewModels"
+             xmlns:models="clr-namespace:FoodieApp.Models"
+             xmlns:converters="clr-namespace:FoodieApp.Converters"
+             x:Class="FoodieApp.Views.RestaurantFinderPage"
+             x:DataType="vm:RestaurantFinderViewModel"
+             Title="{Binding Title}"
+             AutomationProperties.Name="Restaurant finder page">
+
+    <ContentPage.Resources>
+        <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+        <converters:OpenStatusConverter x:Key="OpenStatusConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*" Padding="16" RowSpacing="16">
+
+        <!-- Search Controls -->
+        <VerticalStackLayout Grid.Row="0" Spacing="12">
+            <Button Text="Find Nearby Restaurants"
+                    Command="{Binding FindNearbyRestaurantsCommand}"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    IsEnabled="{Binding IsLoadingLocation, Converter={StaticResource InverseBoolConverter}}"
+                    AutomationProperties.Name="Find restaurants nearby" />
+
+            <ActivityIndicator IsRunning="{Binding IsLoadingLocation}"
+                               IsVisible="{Binding IsLoadingLocation}"
+                               Color="{StaticResource Primary}" />
+
+            <Border IsVisible="{Binding HasError}"
+                    BackgroundColor="{StaticResource ErrorLight}"
+                    Style="{StaticResource CardStyle}">
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="{StaticResource Error}"
+                       FontSize="14" />
+            </Border>
+
+            <Label Text="{Binding LocationStatus}"
+                   FontSize="14"
+                   TextColor="{StaticResource Gray500}"
+                   HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+
+        <!-- Restaurant List -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Restaurants}"
+                        SelectionMode="None"
+                        AutomationProperties.Name="Nearby restaurants list">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="12">
+                    <Label Text="🗺️"
+                           FontSize="48"
+                           HorizontalOptions="Center" />
+                    <Label Text="Find restaurants near you"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                    <Label Text="Tap the button above to search for restaurants based on your current location."
+                           FontSize="14"
+                           TextColor="{StaticResource Gray500}"
+                           HorizontalTextAlignment="Center"
+                           HorizontalOptions="Center"
+                           MaximumWidthRequest="280" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Restaurant">
+                    <Border Style="{StaticResource CardStyle}" Margin="0,4">
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="4" Padding="12">
+                            <!-- Name and Open Status -->
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="{Binding Name}"
+                                   FontSize="17"
+                                   FontAttributes="Bold" />
+                            <Border Grid.Row="0" Grid.Column="1"
+                                    Style="{StaticResource ChipStyle}"
+                                    BackgroundColor="{Binding IsOpen, Converter={StaticResource BoolToColorConverter}}"
+                                    Opacity="0.15"
+                                    VerticalOptions="Center">
+                                <Label Text="{Binding IsOpen, Converter={StaticResource OpenStatusConverter}}"
+                                       FontSize="11"
+                                       FontAttributes="Bold"
+                                       TextColor="{Binding IsOpen, Converter={StaticResource BoolToColorConverter}}" />
+                            </Border>
+
+                            <!-- Cuisine and Rating -->
+                            <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Spacing="12">
+                                <Label Text="{Binding Cuisine}"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray500}" />
+                                <Label Text="{Binding Rating, StringFormat='{0:F1} ★'}"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Primary}" />
+                                <Label Text="{Binding DistanceKm, StringFormat='{0:F1} km'}"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray500}" />
+                            </HorizontalStackLayout>
+
+                            <!-- Address and Map Button -->
+                            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="*,Auto">
+                                <Label Grid.Column="0"
+                                       Text="{Binding Address}"
+                                       FontSize="13"
+                                       TextColor="{StaticResource Gray400}"
+                                       VerticalOptions="Center" />
+                                <Button Grid.Column="1"
+                                        Text="Open in Maps"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RestaurantFinderViewModel}}, Path=OpenRestaurantOnMapCommand}"
+                                        CommandParameter="{Binding .}"
+                                        FontSize="12"
+                                        HeightRequest="34"
+                                        BackgroundColor="{StaticResource PrimaryLight}"
+                                        TextColor="{StaticResource Primary}"
+                                        AutomationProperties.Name="Open restaurant in maps"
+                                        AutomationProperties.Hint="Opens the map application with directions to the restaurant" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>

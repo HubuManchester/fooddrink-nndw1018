@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Primary Brand Colors -->
+    <Color x:Key="Primary">#FF6B35</Color>
+    <Color x:Key="PrimaryDark">#E55A25</Color>
+    <Color x:Key="PrimaryLight">#FFF0E8</Color>
+    <Color x:Key="Secondary">#2EC4B6</Color>
+    <Color x:Key="SecondaryDark">#20A89C</Color>
+    <Color x:Key="SecondaryLight">#E0F7F5</Color>
+
+    <!-- Functional Colors -->
+    <Color x:Key="Success">#4CAF50</Color>
+    <Color x:Key="SuccessLight">#E8F5E9</Color>
+    <Color x:Key="Warning">#FF9800</Color>
+    <Color x:Key="WarningLight">#FFF3E0</Color>
+    <Color x:Key="Error">#F44336</Color>
+    <Color x:Key="ErrorLight">#FFEBEE</Color>
+    <Color x:Key="Info">#2196F3</Color>
+    <Color x:Key="InfoLight">#E3F2FD</Color>
+
+    <!-- Neutral Colors -->
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Black">#000000</Color>
+    <Color x:Key="Gray100">#F5F5F5</Color>
+    <Color x:Key="Gray200">#EEEEEE</Color>
+    <Color x:Key="Gray300">#E0E0E0</Color>
+    <Color x:Key="Gray400">#BDBDBD</Color>
+    <Color x:Key="Gray500">#9E9E9E</Color>
+    <Color x:Key="Gray600">#757575</Color>
+    <Color x:Key="Gray800">#424242</Color>
+    <Color x:Key="Gray900">#212121</Color>
+
+    <!-- Dark Theme Specific -->
+    <Color x:Key="DarkBackground">#121212</Color>
+    <Color x:Key="DarkSurface">#1E1E1E</Color>
+    <Color x:Key="DarkCard">#2C2C2C</Color>
+
+</ResourceDictionary>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FoodieApp.ViewModels"
+             x:Class="FoodieApp.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="{Binding Title}"
+             AutomationProperties.Name="Settings page">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="20">
+
+            <!-- Appearance Section -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Appearance"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           AutomationProperties.HeadingLevel="Level1" />
+
+                    <!-- Dark Mode -->
+                    <Grid ColumnDefinitions="*,Auto" Padding="0,4">
+                        <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="4">
+                            <Label Text="Dark Mode"
+                                   FontSize="17"
+                                   FontAttributes="Bold" />
+                            <Label Text="Switch between light and dark theme. Easy on the eyes at night."
+                                   FontSize="13"
+                                   TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding IsDarkMode}"
+                                AutomationProperties.Name="Dark mode toggle"
+                                AutomationProperties.Hint="Enable dark mode for reduced eye strain in low light conditions" />
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray200}" />
+
+                    <!-- Font Scaling -->
+                    <VerticalStackLayout Spacing="6">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Text="Font Scaling"
+                                   FontSize="17"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center" />
+                            <Label Grid.Column="1"
+                                   Text="{Binding FontScaleDisplayText}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                        <Label Text="Adjust text size for better readability. Follows WCAG 1.4.4 Resize Text guideline."
+                               FontSize="13"
+                               TextColor="{StaticResource Gray500}" />
+                        <Slider Value="{Binding FontScale}"
+                                Minimum="0.8"
+                                Maximum="2.0"
+                                MinimumTrackColor="{StaticResource Primary}"
+                                MaximumTrackColor="{StaticResource Gray300}"
+                                ThumbColor="{StaticResource Primary}"
+                                AutomationProperties.Name="Font scale slider"
+                                AutomationProperties.Hint="Adjust the font size from 0.8x to 2.0x" />
+                        <Grid ColumnDefinitions="*,*">
+                            <Label Grid.Column="0"
+                                   Text="A"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray500}" />
+                            <Label Grid.Column="1"
+                                   Text="A"
+                                   FontSize="24"
+                                   HorizontalOptions="End"
+                                   TextColor="{StaticResource Gray500}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Accessibility Section -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Accessibility"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           AutomationProperties.HeadingLevel="Level1" />
+
+                    <!-- Reduce Animations -->
+                    <Grid ColumnDefinitions="*,Auto" Padding="0,4">
+                        <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="4">
+                            <Label Text="Reduce Animations"
+                                   FontSize="17"
+                                   FontAttributes="Bold" />
+                            <Label Text="Minimize motion effects for users with vestibular disorders. WCAG 2.3.3."
+                                   FontSize="13"
+                                   TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding ReduceAnimations}"
+                                AutomationProperties.Name="Reduce animations toggle" />
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray200}" />
+
+                    <!-- High Contrast -->
+                    <Grid ColumnDefinitions="*,Auto" Padding="0,4">
+                        <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="4">
+                            <Label Text="High Contrast"
+                                   FontSize="17"
+                                   FontAttributes="Bold" />
+                            <Label Text="Increase contrast ratio to at least 4.5:1. WCAG 1.4.3."
+                                   FontSize="13"
+                                   TextColor="{StaticResource Gray500}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding HighContrast}"
+                                AutomationProperties.Name="High contrast toggle" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Info Buttons -->
+            <VerticalStackLayout Spacing="8">
+                <Button Text="Accessibility Information"
+                        Command="{Binding ShowAccessibilityInfoCommand}"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        AutomationProperties.Name="Show accessibility information" />
+
+                <Button Text="About Foodie"
+                        Command="{Binding ShowAboutCommand}"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        AutomationProperties.Name="Show about information" />
+            </VerticalStackLayout>
+
+            <!-- WCAG Reference -->
+            <Border Style="{StaticResource CardStyle}"
+                    BackgroundColor="{StaticResource PrimaryLight}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Accessibility Compliance"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+                    <Label Text="This app follows Web Content Accessibility Guidelines (WCAG) 2.1 standards for mobile applications, including:"
+                           FontSize="14"
+                           TextColor="{StaticResource Gray600}" />
+                    <Label Text="✓ Perceivable - Text alternatives, adaptable content
+✓ Operable - Keyboard accessible, sufficient time, navigable
+✓ Understandable - Readable text, predictable behavior
+✓ Robust - Compatible with assistive technologies"
+                           FontSize="13"
+                           TextColor="{StaticResource Gray600}"
+                           LineHeight="1.5" />
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

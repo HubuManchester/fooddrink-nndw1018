@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FoodieApp.ViewModels"
+             xmlns:models="clr-namespace:FoodieApp.Models"
+             xmlns:converters="clr-namespace:FoodieApp.Converters"
+             x:Class="FoodieApp.Views.RecipeListPage"
+             x:DataType="vm:RecipeListViewModel"
+             Title="{Binding Title}"
+             AutomationProperties.Name="Recipe list page">
+
+    <ContentPage.Resources>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+        <converters:DifficultyToColorConverter x:Key="DifficultyToColorConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*" Padding="16" RowSpacing="16">
+
+        <!-- Filters -->
+        <Border Grid.Row="0" Style="{StaticResource CardStyle}" Padding="12"
+                AutomationProperties.Name="Recipe filters">
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Filter &amp; Sort"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       AutomationProperties.HeadingLevel="Level2" />
+
+                <!-- Sort Options -->
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Sort by:"
+                           FontSize="14"
+                           VerticalOptions="Center"
+                           TextColor="{StaticResource Gray500}" />
+                    <Picker ItemsSource="{Binding SortOptions}"
+                            SelectedItem="{Binding SortOption}"
+                            FontSize="14"
+                            AutomationProperties.Name="Sort recipes"
+                            AutomationProperties.Hint="Select how to sort the recipe list" />
+                </HorizontalStackLayout>
+
+                <!-- Difficulty Filter -->
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="Difficulty:"
+                           FontSize="14"
+                           VerticalOptions="Center"
+                           TextColor="{StaticResource Gray500}" />
+                    <Picker ItemsSource="{Binding DifficultyOptions}"
+                            SelectedItem="{Binding FilterDifficulty}"
+                            FontSize="14"
+                            AutomationProperties.Name="Filter by difficulty"
+                            AutomationProperties.Hint="Filter recipes by cooking difficulty" />
+                </HorizontalStackLayout>
+
+                <!-- Favourites Toggle -->
+                <HorizontalStackLayout Spacing="8">
+                    <Switch IsToggled="{Binding ShowFavouritesOnly}"
+                            AutomationProperties.Name="Show favourites only"
+                            AutomationProperties.Hint="Toggle to show only favourite recipes" />
+                    <Label Text="Favourites only"
+                           FontSize="14"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <Button Text="Apply Filters"
+                        Command="{Binding ApplyFiltersCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        AutomationProperties.Name="Apply recipe filters" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Recipe List -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Recipes}"
+                        SelectionMode="Single"
+                        SelectionChangedCommand="{Binding NavigateToDetailCommand}"
+                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}"
+                        AutomationProperties.Name="Recipe list">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="12">
+                    <Label Text="🍽️"
+                           FontSize="48"
+                           HorizontalOptions="Center" />
+                    <Label Text="No recipes found"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                    <Label Text="Try adjusting your filters or search terms."
+                           FontSize="14"
+                           TextColor="{StaticResource Gray500}"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Recipe">
+                    <Border Style="{StaticResource CardStyle}" Margin="0,4">
+                        <Grid ColumnDefinitions="80,*,Auto,Auto" ColumnSpacing="12" Padding="10">
+                            <!-- Recipe icon -->
+                            <Frame Grid.Column="0"
+                                   CornerRadius="8"
+                                   Padding="0"
+                                   HasShadow="False"
+                                   BackgroundColor="{StaticResource PrimaryLight}">
+                                <Label Text="🍽️"
+                                       FontSize="32"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                            </Frame>
+
+                            <!-- Recipe info -->
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
+                                <Label Text="{Binding Name}"
+                                       FontSize="16"
+                                       FontAttributes="Bold" />
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label Text="{Binding Rating, StringFormat='{0:F1} ★'}"
+                                           FontSize="13"
+                                           TextColor="{StaticResource Gray500}" />
+                                    <Label Text="{Binding Difficulty}"
+                                           FontSize="12"
+                                           TextColor="{Binding Difficulty, Converter={StaticResource DifficultyToColorConverter}}" />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Spacing="4">
+                                    <Label Text="{Binding PrepTimeMinutes, StringFormat='{0}min'}"
+                                           FontSize="11"
+                                           TextColor="{StaticResource Gray500}" />
+                                    <Label Text="·"
+                                           FontSize="11"
+                                           TextColor="{StaticResource Gray500}" />
+                                    <Label Text="{Binding Nutrition.Calories, StringFormat='{0:F0} cal'}"
+                                           FontSize="11"
+                                           TextColor="{StaticResource Gray500}" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+
+                            <!-- Favourite button -->
+                            <ImageButton Grid.Column="2"
+                                         Source="icon_heart.png"
+                                         WidthRequest="36"
+                                         HeightRequest="36"
+                                         VerticalOptions="Center"
+                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeListViewModel}}, Path=ToggleFavouriteCommand}"
+                                         CommandParameter="{Binding .}"
+                                         AutomationProperties.Name="Toggle favourite"
+                                         AutomationProperties.Hint="Add or remove this recipe from favourites" />
+
+                            <!-- Arrow -->
+                            <Label Grid.Column="3"
+                                   Text="›"
+                                   FontSize="24"
+                                   TextColor="{StaticResource Gray400}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Loading -->
+        <ActivityIndicator Grid.Row="1"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="{StaticResource Primary}"
+                           VerticalOptions="Center"
+                           AutomationProperties.Name="Loading recipes" />
+
+    </Grid>
+
+</ContentPage>

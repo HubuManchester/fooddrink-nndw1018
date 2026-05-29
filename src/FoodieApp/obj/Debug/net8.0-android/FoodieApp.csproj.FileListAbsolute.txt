@@ -1,0 +1,5 @@
+C:\Users\闹闹\Desktop\move\FoodieApp\src\FoodieApp\obj\Debug\net8.0-android\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+C:\Users\闹闹\Desktop\move\FoodieApp\src\FoodieApp\obj\Debug\net8.0-android\build.props
+C:\Users\闹闹\Desktop\move\FoodieApp\src\FoodieApp\obj\Debug\net8.0-android\adb.props
+C:\Users\闹闹\Desktop\move\FoodieApp\src\FoodieApp\obj\Debug\net8.0-android\_CompileBindingJava.FileList.txt
+C:\Users\闹闹\Desktop\move\FoodieApp\src\FoodieApp\obj\Debug\net8.0-android\FoodieApp.csproj.AssemblyReference.cache

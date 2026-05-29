@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FoodieApp.ViewModels"
+             xmlns:models="clr-namespace:FoodieApp.Models"
+             xmlns:converters="clr-namespace:FoodieApp.Converters"
+             x:Class="FoodieApp.Views.MealPlannerPage"
+             x:DataType="vm:MealPlannerViewModel"
+             Title="{Binding Title}"
+             AutomationProperties.Name="Meal planner page">
+
+    <ContentPage.Resources>
+        <converters:CountToBoolConverter x:Key="CountToBoolConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*" Padding="16" RowSpacing="16">
+
+        <!-- Date Selector -->
+        <Border Grid.Row="0" Style="{StaticResource CardStyle}">
+            <HorizontalStackLayout Spacing="12">
+                <Label Text="Week of:"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+                <DatePicker Date="{Binding SelectedDate}"
+                            FontSize="16"
+                            AutomationProperties.Name="Select date"
+                            AutomationProperties.Hint="Choose a date to plan meals" />
+            </HorizontalStackLayout>
+        </Border>
+
+        <!-- Daily Nutrition Summary -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}"
+                IsVisible="{Binding DailyNutritionTotal.Calories, Converter={StaticResource CountToBoolConverter}}">
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Daily Nutrition Summary"
+                       FontSize="16"
+                       FontAttributes="Bold" />
+                <HorizontalStackLayout Spacing="16">
+                    <Label Text="{Binding DailyNutritionTotal.Calories, StringFormat='🔥 {0:F0} cal'}"
+                           FontSize="14" />
+                    <Label Text="{Binding DailyNutritionTotal.ProteinGrams, StringFormat='🥩 {0:F1}g protein'}"
+                           FontSize="14" />
+                    <Label Text="{Binding DailyNutritionTotal.CarbohydratesGrams, StringFormat='🍞 {0:F1}g carbs'}"
+                           FontSize="14" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Weekly Meal Grid -->
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding WeeklyPlan}"
+                        AutomationProperties.Name="Weekly meal plan">
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate x:DataType="models:MealPlan">
+                    <Label Text="{Binding Date, StringFormat='{0:dddd, MMM dd}'}"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           Padding="0,12,0,4"
+                           BackgroundColor="{AppThemeBinding Light=White, Dark=Black}" />
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:MealPlan">
+                    <Border Style="{StaticResource CardStyle}" Margin="0,2">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Padding="10">
+                            <Label Grid.Column="0"
+                                   FontSize="20"
+                                   VerticalOptions="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding Type}" Value="Breakfast">
+                                        <Setter Property="Text" Value="🌅" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Label" Binding="{Binding Type}" Value="Lunch">
+                                        <Setter Property="Text" Value="☀️" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Label" Binding="{Binding Type}" Value="Dinner">
+                                        <Setter Property="Text" Value="🌙" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Label" Binding="{Binding Type}" Value="Snack">
+                                        <Setter Property="Text" Value="🍪" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                <Label Text="{Binding Type}"
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}" />
+                                <Label Text="{Binding RecipeName}"
+                                       FontSize="15"
+                                       FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2"
+                                   Text="›"
+                                   FontSize="20"
+                                   TextColor="{StaticResource Gray400}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="12">
+                    <Label Text="📅"
+                           FontSize="48"
+                           HorizontalOptions="Center" />
+                    <Label Text="No meal plan yet"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                    <Button Text="Create Meal Plan"
+                            Command="{Binding LoadMealPlanCommand}"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            AutomationProperties.Name="Create new meal plan" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>

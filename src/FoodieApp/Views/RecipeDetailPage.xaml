@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FoodieApp.ViewModels"
+             xmlns:converters="clr-namespace:FoodieApp.Converters"
+             x:Class="FoodieApp.Views.RecipeDetailPage"
+             x:DataType="vm:RecipeDetailViewModel"
+             Title="{Binding Title}"
+             AutomationProperties.Name="Recipe detail page">
+
+    <ContentPage.Resources>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+        <converters:DifficultyToColorConverter x:Key="DifficultyToColorConverter" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="20">
+
+            <!-- Loading -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Primary}"
+                               AutomationProperties.Name="Loading recipe details" />
+
+            <!-- Error -->
+            <Border IsVisible="{Binding HasError}"
+                    BackgroundColor="{StaticResource ErrorLight}"
+                    Style="{StaticResource CardStyle}">
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="{StaticResource Error}"
+                       FontSize="14" />
+            </Border>
+
+            <!-- Recipe Header Image Placeholder -->
+            <Border Style="{StaticResource CardStyle}"
+                    HeightRequest="200"
+                    Padding="0"
+                    BackgroundColor="{StaticResource PrimaryLight}">
+                <Label Text="🍲"
+                       FontSize="80"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </Border>
+
+            <!-- Recipe Name and Actions -->
+            <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
+                <Label Grid.Column="0"
+                       Text="{Binding Recipe.Name}"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center"
+                       AutomationProperties.HeadingLevel="Level1" />
+                <ImageButton Grid.Column="1"
+                             Source="icon_heart.png"
+                             WidthRequest="44"
+                             HeightRequest="44"
+                             Command="{Binding ToggleFavouriteCommand}"
+                             AutomationProperties.Name="Toggle favourite" />
+                <ImageButton Grid.Column="2"
+                             Source="icon_share.png"
+                             WidthRequest="44"
+                             HeightRequest="44"
+                             Command="{Binding ShareRecipeCommand}"
+                             AutomationProperties.Name="Share recipe"
+                             AutomationProperties.Hint="Share this recipe with others" />
+                <ImageButton Grid.Column="3"
+                             Source="icon_speak.png"
+                             WidthRequest="44"
+                             HeightRequest="44"
+                             Command="{Binding SpeakRecipeCommand}"
+                             AutomationProperties.Name="Read recipe aloud"
+                             AutomationProperties.Hint="Use text to speech to read the recipe instructions" />
+            </Grid>
+
+            <!-- Quick Info Chips -->
+            <HorizontalStackLayout Spacing="12">
+                <Border Style="{StaticResource ChipStyle}" BackgroundColor="{StaticResource PrimaryLight}">
+                    <Label Text="{Binding Recipe.PrepTimeMinutes, StringFormat='⏱ Prep: {0} min'}"
+                           FontSize="13" />
+                </Border>
+                <Border Style="{StaticResource ChipStyle}" BackgroundColor="{StaticResource SecondaryLight}">
+                    <Label Text="{Binding Recipe.CookTimeMinutes, StringFormat='🔥 Cook: {0} min'}"
+                           FontSize="13" />
+                </Border>
+                <Border Style="{StaticResource ChipStyle}"
+                        BackgroundColor="{Binding Recipe.Difficulty, Converter={StaticResource DifficultyToColorConverter}}"
+                        Opacity="0.2">
+                    <Label Text="{Binding Recipe.Difficulty, StringFormat='📊 {0}'}"
+                           FontSize="13" />
+                </Border>
+            </HorizontalStackLayout>
+
+            <!-- Description -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Description"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           AutomationProperties.HeadingLevel="Level2" />
+                    <Label Text="{Binding Recipe.Description}"
+                           FontSize="15"
+                           LineHeight="1.4"
+                           TextColor="{StaticResource Gray600}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Servings Adjuster -->
+            <Border Style="{StaticResource CardStyle}">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
+                    <Label Grid.Column="0"
+                           Text="Servings:"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center" />
+                    <Entry Grid.Column="1"
+                           Text="{Binding ServingsText}"
+                           Keyboard="Numeric"
+                           FontSize="16"
+                           HorizontalTextAlignment="Center"
+                           AutomationProperties.Name="Number of servings"
+                           AutomationProperties.Hint="Enter desired number of servings" />
+                    <Button Grid.Column="2"
+                            Text="-"
+                            WidthRequest="44"
+                            HeightRequest="44"
+                            FontSize="18"
+                            Command="{Binding UpdateServingsCommand}"
+                            CommandParameter="decrease"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            AutomationProperties.Name="Decrease servings" />
+                    <Button Grid.Column="3"
+                            Text="+"
+                            WidthRequest="44"
+                            HeightRequest="44"
+                            FontSize="18"
+                            Command="{Binding UpdateServingsCommand}"
+                            CommandParameter="increase"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            AutomationProperties.Name="Increase servings" />
+                </Grid>
+            </Border>
+
+            <!-- Ingredients -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Ingredients"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           AutomationProperties.HeadingLevel="Level2" />
+                    <CollectionView ItemsSource="{Binding Recipe.Ingredients}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <HorizontalStackLayout Spacing="8" Padding="0,4">
+                                    <Label Text="•"
+                                           FontSize="16"
+                                           TextColor="{StaticResource Primary}"
+                                           VerticalOptions="Center" />
+                                    <Label Text="{Binding .}"
+                                           FontSize="15"
+                                           VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Instructions -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Instructions"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           AutomationProperties.HeadingLevel="Level2" />
+                    <CollectionView ItemsSource="{Binding Recipe.Instructions}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <HorizontalStackLayout Spacing="8" Padding="0,6">
+                                    <Border StrokeShape="RoundRectangle 12"
+                                            BackgroundColor="{StaticResource Primary}"
+                                            WidthRequest="24"
+                                            HeightRequest="24"
+                                            StrokeThickness="0"
+                                            VerticalOptions="Start">
+                                        <Label Text="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext}"
+                                               FontSize="12"
+                                               TextColor="White"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+                                    <Label Text="{Binding .}"
+                                           FontSize="15"
+                                           LineHeight="1.4"
+                                           VerticalOptions="Start" />
+                                </HorizontalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Nutrition Info -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Nutrition (per serving)"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           AutomationProperties.HeadingLevel="Level2" />
+                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="12">
+                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="{Binding Recipe.Nutrition.Calories, StringFormat='{0:F0}'}"
+                                       FontSize="22"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Primary}" />
+                                <Label Text="Calories"
+                                       FontSize="11"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="{Binding Recipe.Nutrition.ProteinGrams, StringFormat='{0:F1}g'}"
+                                       FontSize="22"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Primary}" />
+                                <Label Text="Protein"
+                                       FontSize="11"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="{Binding Recipe.Nutrition.CarbohydratesGrams, StringFormat='{0:F1}g'}"
+                                       FontSize="22"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Primary}" />
+                                <Label Text="Carbs"
+                                       FontSize="11"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="{Binding Recipe.Nutrition.FatGrams, StringFormat='{0:F1}g'}"
+                                       FontSize="22"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Primary}" />
+                                <Label Text="Fat"
+                                       FontSize="11"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="{Binding Recipe.Nutrition.FiberGrams, StringFormat='{0:F1}g'}"
+                                       FontSize="22"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Primary}" />
+                                <Label Text="Fiber"
+                                       FontSize="11"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="{Binding Recipe.Nutrition.SugarGrams, StringFormat='{0:F1}g'}"
+                                       FontSize="22"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Primary}" />
+                                <Label Text="Sugar"
+                                       FontSize="11"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="{Binding Recipe.Nutrition.SodiumMilligrams, StringFormat='{0:F0}mg'}"
+                                       FontSize="22"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Primary}" />
+                                <Label Text="Sodium"
+                                       FontSize="11"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Dietary Tags -->
+            <HorizontalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Recipe.DietaryTags}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <Border Style="{StaticResource ChipStyle}" BackgroundColor="{StaticResource SuccessLight}">
+                            <Label Text="{Binding .}"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Success}"
+                                   FontAttributes="Bold" />
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

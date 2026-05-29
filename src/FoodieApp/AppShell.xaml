@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FoodieApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:FoodieApp.Views"
+    FlyoutBehavior="Disabled"
+    Shell.FlyoutBehavior="Disabled">
+
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BaseShellTabStyle" TargetType="TabBar">
+                <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Gray900}}" />
+                <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+                <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light=#80FFFFFF, Dark=#80FFFFFF}" />
+                <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+            </Style>
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <TabBar>
+        <ShellContent
+            Title="Discover"
+            Icon="icon_home.png"
+            ContentTemplate="{DataTemplate views:MainPage}"
+            Route="MainPage" />
+
+        <ShellContent
+            Title="Recipes"
+            Icon="icon_recipes.png"
+            ContentTemplate="{DataTemplate views:RecipeListPage}"
+            Route="RecipeListPage" />
+
+        <ShellContent
+            Title="Scan"
+            Icon="icon_scan.png"
+            ContentTemplate="{DataTemplate views:BarcodeScanPage}"
+            Route="BarcodeScanPage" />
+
+        <ShellContent
+            Title="Meals"
+            Icon="icon_meal.png"
+            ContentTemplate="{DataTemplate views:MealPlannerPage}"
+            Route="MealPlannerPage" />
+
+        <ShellContent
+            Title="Settings"
+            Icon="icon_settings.png"
+            ContentTemplate="{DataTemplate views:SettingsPage}"
+            Route="SettingsPage" />
+    </TabBar>
+
+</Shell>
