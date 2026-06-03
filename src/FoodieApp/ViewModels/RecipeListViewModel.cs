@@ -4,10 +4,12 @@ namespace FoodieApp.ViewModels;
 public partial class RecipeListViewModel : BaseViewModel
 {
     private readonly IRecipeService _recipeService;
+    private readonly ISettingsService _settingsService;
 
-    public RecipeListViewModel(IRecipeService recipeService)
+    public RecipeListViewModel(IRecipeService recipeService, ISettingsService settingsService)
     {
         _recipeService = recipeService;
+        _settingsService = settingsService;
         Title = "Recipes";
     }
 
@@ -82,6 +84,9 @@ public partial class RecipeListViewModel : BaseViewModel
         await ExecuteAsync(async () =>
         {
             await _recipeService.ToggleFavouriteAsync(recipe.Id);
+
+            if (!_settingsService.ReduceAnimations)
+                HapticFeedbackHelper.PerformClick();
         }, "Failed to update favourite");
 
         LoadRecipesCommand.Execute(null);

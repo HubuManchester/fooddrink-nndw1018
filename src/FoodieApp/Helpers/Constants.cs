@@ -19,6 +19,8 @@ public static class Constants
         public const string LocationDisabled = "Location services are disabled. Please enable them in Settings.";
         public const string CameraPermissionDenied = "Camera permission is required to scan barcodes.";
         public const string EmptySearchQuery = "Please enter a search term.";
+        public const string PhotoSaveError = "Failed to save photo. Please try again.";
+        public const string FormValidationError = "Please correct the highlighted fields.";
     }
 
     public static class AccessibilityLabels
@@ -29,5 +31,9 @@ public static class Constants
         public const string ScanButton = "Scan barcode";
         public const string BackButton = "Go back";
         public const string SettingsButton = "Open settings";
+        public const string TakePhotoButton = "Take a photo";
+        public const string RecordLocationButton = "Record current location";
+        public const string SaveFoodRecordButton = "Save food record";
+        public const string SpeakNutritionButton = "Read nutrition information aloud";
     }
 }

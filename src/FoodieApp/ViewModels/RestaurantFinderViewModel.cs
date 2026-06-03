@@ -2,8 +2,11 @@ namespace FoodieApp.ViewModels;
 
 public partial class RestaurantFinderViewModel : BaseViewModel
 {
-    public RestaurantFinderViewModel()
+    private readonly ISettingsService _settingsService;
+
+    public RestaurantFinderViewModel(ISettingsService settingsService)
     {
+        _settingsService = settingsService;
         Title = "Nearby Restaurants";
     }
 
@@ -34,11 +37,14 @@ public partial class RestaurantFinderViewModel : BaseViewModel
             if (status != PermissionStatus.Granted)
             {
                 status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
-                if (status != PermissionStatus.Granted)
+                if (status != PermissionStatus.Granted
+                    && (DeviceInfo.Current.Platform == DevicePlatform.iOS
+                        || DeviceInfo.Current.Platform == DevicePlatform.Android))
                 {
                     SetError(Constants.ErrorMessages.LocationDisabled);
                     return;
                 }
+                // On desktop, proceed anyway — system location service handles access
             }
 
             var location = await Geolocation.Default.GetLocationAsync(new GeolocationRequest
@@ -90,6 +96,9 @@ public partial class RestaurantFinderViewModel : BaseViewModel
             await Map.Default.OpenAsync(
                 new Location(restaurant.Latitude, restaurant.Longitude),
                 mapLaunchOptions);
+
+            if (!_settingsService.ReduceAnimations)
+                HapticFeedbackHelper.PerformClick();
         }
         catch (Exception ex)
         {

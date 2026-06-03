@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kd78z9/UXbk=",
+  "dgSpecHash": "5z5SWPTE6Uc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\闹闹\\Desktop\\move\\FoodieApp\\src\\FoodieApp\\FoodieApp.csproj",
+  "projectFilePath": "D:\\move\\FoodieApp\\src\\FoodieApp\\FoodieApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\闹闹\\.nuget\\packages\\communitytoolkit.maui\\7.0.1\\communitytoolkit.maui.7.0.1.nupkg.sha512",
     "C:\\Users\\闹闹\\.nuget\\packages\\communitytoolkit.maui.core\\7.0.1\\communitytoolkit.maui.core.7.0.1.nupkg.sha512",
@@ -29,7 +29,7 @@
     "C:\\Users\\闹闹\\.nuget\\packages\\microsoft.maui.graphics\\8.0.100\\microsoft.maui.graphics.8.0.100.nupkg.sha512",
     "C:\\Users\\闹闹\\.nuget\\packages\\microsoft.maui.graphics.win2d.winui.desktop\\8.0.100\\microsoft.maui.graphics.win2d.winui.desktop.8.0.100.nupkg.sha512",
     "C:\\Users\\闹闹\\.nuget\\packages\\microsoft.maui.resizetizer\\8.0.100\\microsoft.maui.resizetizer.8.0.100.nupkg.sha512",
-    "C:\\Users\\闹闹\\.nuget\\packages\\microsoft.net.illink.tasks\\8.0.24\\microsoft.net.illink.tasks.8.0.24.nupkg.sha512",
+    "C:\\Users\\闹闹\\.nuget\\packages\\microsoft.net.illink.tasks\\8.0.27\\microsoft.net.illink.tasks.8.0.27.nupkg.sha512",
     "C:\\Users\\闹闹\\.nuget\\packages\\microsoft.windows.sdk.buildtools\\10.0.22621.756\\microsoft.windows.sdk.buildtools.10.0.22621.756.nupkg.sha512",
     "C:\\Users\\闹闹\\.nuget\\packages\\microsoft.windowsappsdk\\1.5.240802000\\microsoft.windowsappsdk.1.5.240802000.nupkg.sha512",
     "C:\\Users\\闹闹\\.nuget\\packages\\system.speech\\8.0.0-rc.2.23479.6\\system.speech.8.0.0-rc.2.23479.6.nupkg.sha512",
@@ -124,11 +124,7 @@
     "C:\\Users\\闹闹\\.nuget\\packages\\zxing.net\\0.16.9\\zxing.net.0.16.9.nupkg.sha512",
     "C:\\Users\\闹闹\\.nuget\\packages\\zxing.net.maui\\0.4.0\\zxing.net.maui.0.4.0.nupkg.sha512",
     "C:\\Users\\闹闹\\.nuget\\packages\\zxing.net.maui.controls\\0.4.0\\zxing.net.maui.controls.0.4.0.nupkg.sha512",
-    "C:\\Users\\闹闹\\.nuget\\packages\\microsoft.ios.ref.net8.0_18.0\\18.0.8324\\microsoft.ios.ref.net8.0_18.0.18.0.8324.nupkg.sha512",
-    "C:\\Users\\闹闹\\.nuget\\packages\\microsoft.ios.runtime.iossimulator-x64.net8.0_18.0\\18.0.8324\\microsoft.ios.runtime.iossimulator-x64.net8.0_18.0.18.0.8324.nupkg.sha512",
-    "C:\\Users\\闹闹\\.nuget\\packages\\microsoft.maccatalyst.runtime.maccatalyst-x64.net8.0_18.0\\18.0.8324\\microsoft.maccatalyst.runtime.maccatalyst-x64.net8.0_18.0.18.0.8324.nupkg.sha512",
-    "C:\\Users\\闹闹\\.nuget\\packages\\microsoft.maccatalyst.ref.net8.0_18.0\\18.0.8324\\microsoft.maccatalyst.ref.net8.0_18.0.18.0.8324.nupkg.sha512",
-    "C:\\Users\\闹闹\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.19041.57\\microsoft.windows.sdk.net.ref.10.0.19041.57.nupkg.sha512"
+    "C:\\Users\\闹闹\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.19041.56\\microsoft.windows.sdk.net.ref.10.0.19041.56.nupkg.sha512"
   ],
   "logs": []
 }

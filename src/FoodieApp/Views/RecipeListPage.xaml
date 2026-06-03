@@ -23,7 +23,7 @@
                 <Label Text="Filter &amp; Sort"
                        FontSize="16"
                        FontAttributes="Bold"
-                       AutomationProperties.HeadingLevel="Level2" />
+ />
 
                 <!-- Sort Options -->
                 <HorizontalStackLayout Spacing="8">
@@ -35,7 +35,7 @@
                             SelectedItem="{Binding SortOption}"
                             FontSize="14"
                             AutomationProperties.Name="Sort recipes"
-                            AutomationProperties.Hint="Select how to sort the recipe list" />
+ />
                 </HorizontalStackLayout>
 
                 <!-- Difficulty Filter -->
@@ -48,14 +48,14 @@
                             SelectedItem="{Binding FilterDifficulty}"
                             FontSize="14"
                             AutomationProperties.Name="Filter by difficulty"
-                            AutomationProperties.Hint="Filter recipes by cooking difficulty" />
+ />
                 </HorizontalStackLayout>
 
                 <!-- Favourites Toggle -->
                 <HorizontalStackLayout Spacing="8">
                     <Switch IsToggled="{Binding ShowFavouritesOnly}"
                             AutomationProperties.Name="Show favourites only"
-                            AutomationProperties.Hint="Toggle to show only favourite recipes" />
+ />
                     <Label Text="Favourites only"
                            FontSize="14"
                            VerticalOptions="Center" />
@@ -133,15 +133,18 @@
                             </VerticalStackLayout>
 
                             <!-- Favourite button -->
-                            <ImageButton Grid.Column="2"
-                                         Source="icon_heart.png"
-                                         WidthRequest="36"
-                                         HeightRequest="36"
-                                         VerticalOptions="Center"
-                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeListViewModel}}, Path=ToggleFavouriteCommand}"
-                                         CommandParameter="{Binding .}"
-                                         AutomationProperties.Name="Toggle favourite"
-                                         AutomationProperties.Hint="Add or remove this recipe from favourites" />
+                            <Button Grid.Column="2"
+                                    Text="❤️"
+                                    FontSize="18"
+                                    Padding="0"
+                                    MinimumWidthRequest="40"
+                                    MinimumHeightRequest="40"
+                                    BackgroundColor="Transparent"
+                                    VerticalOptions="Center"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeListViewModel}}, Path=ToggleFavouriteCommand}"
+                                    CommandParameter="{Binding .}"
+                                    AutomationProperties.Name="Toggle favourite"
+ />
 
                             <!-- Arrow -->
                             <Label Grid.Column="3"

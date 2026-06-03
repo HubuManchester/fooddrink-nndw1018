@@ -27,6 +27,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<INutritionService, NutritionService>();
         builder.Services.AddSingleton<IBarcodeService, BarcodeService>();
         builder.Services.AddSingleton<ISettingsService, SettingsService>();
+        builder.Services.AddSingleton<IFoodRecordService, FoodRecordService>();
 
         builder.Services.AddSingleton<MainViewModel>();
         builder.Services.AddSingleton<RecipeListViewModel>();
@@ -35,6 +36,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<SettingsViewModel>();
         builder.Services.AddSingleton<MealPlannerViewModel>();
         builder.Services.AddSingleton<RestaurantFinderViewModel>();
+        builder.Services.AddTransient<AddFoodRecordViewModel>();
+        builder.Services.AddSingleton<MyRecordsViewModel>();
 
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<RecipeListPage>();
@@ -43,6 +46,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<SettingsPage>();
         builder.Services.AddSingleton<MealPlannerPage>();
         builder.Services.AddSingleton<RestaurantFinderPage>();
+        builder.Services.AddTransient<AddFoodRecordPage>();
+        builder.Services.AddSingleton<MyRecordsPage>();
 
         return builder.Build();
     }

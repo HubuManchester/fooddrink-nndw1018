@@ -10,3 +10,4 @@ global using FoodieApp.ViewModels;
 global using FoodieApp.Views;
 global using FoodieApp.Converters;
 global using FoodieApp.Helpers;
+global using Microsoft.Maui.ApplicationModel.DataTransfer;

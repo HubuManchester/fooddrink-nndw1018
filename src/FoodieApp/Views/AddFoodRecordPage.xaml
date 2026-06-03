@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FoodieApp.ViewModels"
+             x:Class="FoodieApp.Views.AddFoodRecordPage"
+             x:DataType="vm:AddFoodRecordViewModel"
+             xmlns:converters="clr-namespace:FoodieApp.Converters"
+             Title="{Binding Title}"
+             AutomationProperties.Name="Add food record page">
+
+    <ContentPage.Resources>
+        <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <converters:CountToBoolConverter x:Key="CountToBoolConverter" />
+        <converters:BoolToErrorColorConverter x:Key="BoolToErrorColorConverter" />
+    </ContentPage.Resources>
+
+    <ScrollView AutomationProperties.Name="Add food record form">
+        <VerticalStackLayout Padding="16" Spacing="20">
+
+            <!-- Loading -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Primary}"
+                               AutomationProperties.Name="Saving record" />
+
+            <!-- Global Error -->
+            <Border IsVisible="{Binding HasError}"
+                    BackgroundColor="{StaticResource ErrorLight}"
+                    Style="{StaticResource CardStyle}"
+                    AutomationProperties.Name="Form error message">
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="{StaticResource Error}"
+                       FontSize="14" />
+            </Border>
+
+            <!-- Photo Section -->
+            <Border Style="{StaticResource CardStyle}"
+                    AutomationProperties.Name="Photo section">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Food Photo"
+                           FontSize="18"
+                           FontAttributes="Bold" />
+
+                    <!-- Photo Preview -->
+                    <Border Style="{StaticResource CardStyle}"
+                            HeightRequest="220"
+                            Padding="0"
+                            IsVisible="{Binding HasPhoto}"
+                            BackgroundColor="{StaticResource Gray100}">
+                        <Image Source="{Binding PhotoFilePath}"
+                               Aspect="AspectFill"
+                               AutomationProperties.Name="Food photo preview" />
+                    </Border>
+
+                    <!-- Photo Placeholder -->
+                    <Border Style="{StaticResource CardStyle}"
+                            HeightRequest="120"
+                            Padding="0"
+                            IsVisible="{Binding HasPhoto, Converter={StaticResource InverseBoolConverter}}"
+                            BackgroundColor="{StaticResource Gray100}">
+                        <VerticalStackLayout VerticalOptions="Center"
+                                             HorizontalOptions="Center"
+                                             Spacing="8">
+                            <Label Text="📷"
+                                   FontSize="40"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Take a photo of your food"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <Button Grid.Column="0"
+                                Text="Take Photo"
+                                Command="{Binding TakePhotoCommand}"
+                                IsVisible="{Binding HasPhoto, Converter={StaticResource InverseBoolConverter}}"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                AutomationProperties.Name="Take food photo" />
+                        <Button Grid.Column="0"
+                                Text="Change Photo"
+                                Command="{Binding TakePhotoCommand}"
+                                IsVisible="{Binding HasPhoto}"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                AutomationProperties.Name="Change food photo" />
+                        <Button Grid.Column="1"
+                                Text="Remove Photo"
+                                Command="{Binding ClearPhotoCommand}"
+                                IsVisible="{Binding HasPhoto}"
+                                BackgroundColor="{StaticResource Error}"
+                                TextColor="White"
+                                AutomationProperties.Name="Remove food photo" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Name Field -->
+            <Border Style="{StaticResource CardStyle}"
+                    Stroke="{Binding NameHasError, Converter={StaticResource BoolToErrorColorConverter}}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Food Name *"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+                    <Entry Text="{Binding Name}"
+                           Placeholder="Enter food or drink name..."
+                           FontSize="16"
+                           ReturnType="Next"
+                           AutomationProperties.Name="Food name input"
+                           AutomationProperties.HelpText="Required. Enter the name of the food or drink item." />
+                    <Label Text="⚠ Name is required"
+                           IsVisible="{Binding NameHasError}"
+                           TextColor="{StaticResource Error}"
+                           FontSize="12" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Category Picker -->
+            <Border Style="{StaticResource CardStyle}"
+                    Stroke="{Binding CategoryHasError, Converter={StaticResource BoolToErrorColorConverter}}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Category *"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+                    <Border Style="{StaticResource CardStyle}"
+                            Padding="12,10"
+                            BackgroundColor="{StaticResource Gray100}"
+                            AutomationProperties.Name="Food category picker"
+                            AutomationProperties.HelpText="Required. Tap to select the category for this food or drink item.">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnCategoryPickerTapped" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   FontSize="16"
+                                   VerticalOptions="Center">
+                                <Label.Text>
+                                    <Binding Path="SelectedCategory"
+                                             FallbackValue="Select a category..."
+                                             TargetNullValue="Select a category..." />
+                                </Label.Text>
+                            </Label>
+                            <Label Grid.Column="1"
+                                   Text="▼"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray500}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                    <Label Text="⚠ Please select a category"
+                           IsVisible="{Binding CategoryHasError}"
+                           TextColor="{StaticResource Error}"
+                           FontSize="12" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Description -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Description"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+                    <Editor Text="{Binding Description}"
+                            Placeholder="Optional: describe your food or drink..."
+                            FontSize="15"
+                            HeightRequest="80"
+                            AutoSize="TextChanges"
+                            AutomationProperties.Name="Food description input" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Nutrition Information -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Nutrition Information"
+                           FontSize="18"
+                           FontAttributes="Bold" />
+
+                    <Grid ColumnDefinitions="*,*,*"
+                          RowDefinitions="Auto,Auto,Auto"
+                          ColumnSpacing="8"
+                          RowSpacing="12">
+
+                        <!-- Calories -->
+                        <Border Grid.Row="0" Grid.Column="0"
+                                Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Entry Text="{Binding CaloriesText}"
+                                       Keyboard="Numeric"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       TextColor="{StaticResource Primary}"
+                                       AutomationProperties.Name="Calories input" />
+                                <Label Text="Calories"
+                                       FontSize="10"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Protein -->
+                        <Border Grid.Row="0" Grid.Column="1"
+                                Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Entry Text="{Binding ProteinText}"
+                                       Keyboard="Numeric"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       TextColor="{StaticResource Primary}"
+                                       AutomationProperties.Name="Protein grams input" />
+                                <Label Text="Protein (g)"
+                                       FontSize="10"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Carbs -->
+                        <Border Grid.Row="0" Grid.Column="2"
+                                Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Entry Text="{Binding CarbsText}"
+                                       Keyboard="Numeric"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       TextColor="{StaticResource Primary}"
+                                       AutomationProperties.Name="Carbohydrates grams input" />
+                                <Label Text="Carbs (g)"
+                                       FontSize="10"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Fat -->
+                        <Border Grid.Row="1" Grid.Column="0"
+                                Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Entry Text="{Binding FatText}"
+                                       Keyboard="Numeric"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       TextColor="{StaticResource Primary}"
+                                       AutomationProperties.Name="Fat grams input" />
+                                <Label Text="Fat (g)"
+                                       FontSize="10"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Fiber -->
+                        <Border Grid.Row="1" Grid.Column="1"
+                                Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Entry Text="{Binding FiberText}"
+                                       Keyboard="Numeric"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       TextColor="{StaticResource Primary}"
+                                       AutomationProperties.Name="Fiber grams input" />
+                                <Label Text="Fiber (g)"
+                                       FontSize="10"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Sugar -->
+                        <Border Grid.Row="1" Grid.Column="2"
+                                Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Entry Text="{Binding SugarText}"
+                                       Keyboard="Numeric"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       TextColor="{StaticResource Primary}"
+                                       AutomationProperties.Name="Sugar grams input" />
+                                <Label Text="Sugar (g)"
+                                       FontSize="10"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Sodium -->
+                        <Border Grid.Row="2" Grid.Column="0"
+                                Style="{StaticResource NutritionCardStyle}">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Entry Text="{Binding SodiumText}"
+                                       Keyboard="Numeric"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       TextColor="{StaticResource Primary}"
+                                       AutomationProperties.Name="Sodium milligrams input" />
+                                <Label Text="Sodium (mg)"
+                                       FontSize="10"
+                                       HorizontalOptions="Center"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Location Section -->
+            <Border Style="{StaticResource CardStyle}"
+                    AutomationProperties.Name="Location section">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Text="Location"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center" />
+                        <Button Grid.Column="1"
+                                Text="Record Location"
+                                Command="{Binding RecordLocationCommand}"
+                                IsEnabled="{Binding IsRecordingLocation, Converter={StaticResource InverseBoolConverter}}"
+                                FontSize="13"
+                                HeightRequest="38"
+                                BackgroundColor="{StaticResource PrimaryLight}"
+                                TextColor="{StaticResource Primary}"
+                                AutomationProperties.Name="Record current location" />
+                    </Grid>
+
+                    <ActivityIndicator IsRunning="{Binding IsRecordingLocation}"
+                                       IsVisible="{Binding IsRecordingLocation}"
+                                       Color="{StaticResource Primary}" />
+
+                    <!-- Location Display -->
+                    <Border IsVisible="{Binding HasLocation}"
+                            Style="{StaticResource CardStyle}"
+                            BackgroundColor="{StaticResource Gray100}">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Padding="8">
+                            <Label Grid.Column="0"
+                                   Text="📍"
+                                   FontSize="24"
+                                   VerticalOptions="Center" />
+                            <VerticalStackLayout Grid.Column="1"
+                                                 VerticalOptions="Center"
+                                                 Spacing="2">
+                                <Label Text="{Binding LocationName}"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       LineBreakMode="TailTruncation" />
+                                <Label FontSize="12"
+                                       TextColor="{StaticResource Gray500}">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0:F4}, {1:F4}">
+                                            <Binding Path="Latitude" />
+                                            <Binding Path="Longitude" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </VerticalStackLayout>
+                            <Button Grid.Column="2"
+                                    Text="✕"
+                                    Command="{Binding ClearLocationCommand}"
+                                    FontSize="14"
+                                    WidthRequest="36"
+                                    HeightRequest="36"
+                                    BackgroundColor="{StaticResource Gray300}"
+                                    TextColor="{StaticResource Gray800}"
+                                    AutomationProperties.Name="Clear location" />
+                        </Grid>
+                    </Border>
+
+                    <Label Text="Record where you ate or purchased this item."
+                           FontSize="12"
+                           TextColor="{StaticResource Gray500}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Field Validation Errors -->
+            <Border IsVisible="{Binding FieldErrors.Count, Converter={StaticResource CountToBoolConverter}}"
+                    BackgroundColor="{StaticResource ErrorLight}"
+                    Style="{StaticResource CardStyle}"
+                    AutomationProperties.Name="Field validation errors">
+                <VerticalStackLayout Spacing="4"
+                                     BindableLayout.ItemsSource="{Binding FieldErrors}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Label Text="{Binding .}"
+                                   TextColor="{StaticResource Error}"
+                                   FontSize="13" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Save Button -->
+            <Button Text="Save Food Record"
+                    Command="{Binding SaveRecordCommand}"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    HeightRequest="52"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    AutomationProperties.Name="Save food record"
+                    AutomationProperties.HelpText="Validates required fields and saves your food record" />
+
+            <!-- Spacer -->
+            <BoxView HeightRequest="20" Color="Transparent" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

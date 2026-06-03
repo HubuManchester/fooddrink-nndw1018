@@ -14,24 +14,22 @@
             <Border Style="{StaticResource CardStyle}">
                 <VerticalStackLayout Spacing="12">
                     <Label Text="Appearance"
-                           FontSize="20"
-                           FontAttributes="Bold"
-                           AutomationProperties.HeadingLevel="Level1" />
+                           FontSize="{DynamicResource LargeFontSize}"
+                           FontAttributes="Bold" />
 
                     <!-- Dark Mode -->
                     <Grid ColumnDefinitions="*,Auto" Padding="0,4">
                         <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="4">
                             <Label Text="Dark Mode"
-                                   FontSize="17"
+                                   FontSize="{DynamicResource MediumFontSize}"
                                    FontAttributes="Bold" />
                             <Label Text="Switch between light and dark theme. Easy on the eyes at night."
-                                   FontSize="13"
+                                   FontSize="{DynamicResource BaseFontSize}"
                                    TextColor="{StaticResource Gray500}" />
                         </VerticalStackLayout>
                         <Switch Grid.Column="1"
                                 IsToggled="{Binding IsDarkMode}"
-                                AutomationProperties.Name="Dark mode toggle"
-                                AutomationProperties.Hint="Enable dark mode for reduced eye strain in low light conditions" />
+                                AutomationProperties.Name="Dark mode toggle" />
                     </Grid>
 
                     <BoxView HeightRequest="1" Color="{StaticResource Gray200}" />
@@ -41,18 +39,18 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
                                    Text="Font Scaling"
-                                   FontSize="17"
+                                   FontSize="{DynamicResource MediumFontSize}"
                                    FontAttributes="Bold"
                                    VerticalOptions="Center" />
                             <Label Grid.Column="1"
                                    Text="{Binding FontScaleDisplayText}"
-                                   FontSize="16"
+                                   FontSize="{DynamicResource MediumFontSize}"
                                    FontAttributes="Bold"
                                    TextColor="{StaticResource Primary}"
                                    VerticalOptions="Center" />
                         </Grid>
                         <Label Text="Adjust text size for better readability. Follows WCAG 1.4.4 Resize Text guideline."
-                               FontSize="13"
+                               FontSize="{DynamicResource BaseFontSize}"
                                TextColor="{StaticResource Gray500}" />
                         <Slider Value="{Binding FontScale}"
                                 Minimum="0.8"
@@ -60,16 +58,15 @@
                                 MinimumTrackColor="{StaticResource Primary}"
                                 MaximumTrackColor="{StaticResource Gray300}"
                                 ThumbColor="{StaticResource Primary}"
-                                AutomationProperties.Name="Font scale slider"
-                                AutomationProperties.Hint="Adjust the font size from 0.8x to 2.0x" />
+                                AutomationProperties.Name="Font scale slider" />
                         <Grid ColumnDefinitions="*,*">
                             <Label Grid.Column="0"
                                    Text="A"
-                                   FontSize="12"
+                                   FontSize="{DynamicResource SmallFontSize}"
                                    TextColor="{StaticResource Gray500}" />
                             <Label Grid.Column="1"
                                    Text="A"
-                                   FontSize="24"
+                                   FontSize="{DynamicResource TitleFontSize}"
                                    HorizontalOptions="End"
                                    TextColor="{StaticResource Gray500}" />
                         </Grid>
@@ -81,18 +78,17 @@
             <Border Style="{StaticResource CardStyle}">
                 <VerticalStackLayout Spacing="12">
                     <Label Text="Accessibility"
-                           FontSize="20"
-                           FontAttributes="Bold"
-                           AutomationProperties.HeadingLevel="Level1" />
+                           FontSize="{DynamicResource LargeFontSize}"
+                           FontAttributes="Bold" />
 
                     <!-- Reduce Animations -->
                     <Grid ColumnDefinitions="*,Auto" Padding="0,4">
                         <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="4">
                             <Label Text="Reduce Animations"
-                                   FontSize="17"
+                                   FontSize="{DynamicResource MediumFontSize}"
                                    FontAttributes="Bold" />
                             <Label Text="Minimize motion effects for users with vestibular disorders. WCAG 2.3.3."
-                                   FontSize="13"
+                                   FontSize="{DynamicResource BaseFontSize}"
                                    TextColor="{StaticResource Gray500}" />
                         </VerticalStackLayout>
                         <Switch Grid.Column="1"
@@ -106,10 +102,10 @@
                     <Grid ColumnDefinitions="*,Auto" Padding="0,4">
                         <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="4">
                             <Label Text="High Contrast"
-                                   FontSize="17"
+                                   FontSize="{DynamicResource MediumFontSize}"
                                    FontAttributes="Bold" />
                             <Label Text="Increase contrast ratio to at least 4.5:1. WCAG 1.4.3."
-                                   FontSize="13"
+                                   FontSize="{DynamicResource BaseFontSize}"
                                    TextColor="{StaticResource Gray500}" />
                         </VerticalStackLayout>
                         <Switch Grid.Column="1"
@@ -121,10 +117,28 @@
 
             <!-- Info Buttons -->
             <VerticalStackLayout Spacing="8">
-                <Button Text="Accessibility Information"
-                        Command="{Binding ShowAccessibilityInfoCommand}"
+                <Button Text="How to Use Foodie"
+                        Command="{Binding ShowHelpCommand}"
                         Style="{StaticResource SecondaryButtonStyle}"
-                        AutomationProperties.Name="Show accessibility information" />
+                        AutomationProperties.Name="Show app help guide"
+                        AutomationProperties.HelpText="Displays a quick guide on how to use each features of the app" />
+
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <Button Grid.Column="0"
+                            Text="Accessibility Information"
+                            Command="{Binding ShowAccessibilityInfoCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            AutomationProperties.Name="Show accessibility information" />
+                    <Button Grid.Column="1"
+                            Text="🔊"
+                            FontSize="18"
+                            Padding="0"
+                            MinimumWidthRequest="44"
+                            MinimumHeightRequest="44"
+                            BackgroundColor="Transparent"
+                            Command="{Binding SpeakAccessibilityInfoCommand}"
+                            AutomationProperties.Name="Read accessibility information aloud" />
+                </Grid>
 
                 <Button Text="About Foodie"
                         Command="{Binding ShowAboutCommand}"
@@ -137,18 +151,35 @@
                     BackgroundColor="{StaticResource PrimaryLight}">
                 <VerticalStackLayout Spacing="8">
                     <Label Text="Accessibility Compliance"
-                           FontSize="16"
+                           FontSize="{DynamicResource MediumFontSize}"
                            FontAttributes="Bold" />
-                    <Label Text="This app follows Web Content Accessibility Guidelines (WCAG) 2.1 standards for mobile applications, including:"
-                           FontSize="14"
+                    <Label Text="This app follows Web Content Accessibility Guidelines (WCAG) 2.1 Level AA standards for mobile applications:"
+                           FontSize="{DynamicResource BaseFontSize}"
                            TextColor="{StaticResource Gray600}" />
-                    <Label Text="✓ Perceivable - Text alternatives, adaptable content
-✓ Operable - Keyboard accessible, sufficient time, navigable
-✓ Understandable - Readable text, predictable behavior
-✓ Robust - Compatible with assistive technologies"
-                           FontSize="13"
+                    <Label FontSize="{DynamicResource SmallFontSize}"
                            TextColor="{StaticResource Gray600}"
-                           LineHeight="1.5" />
+                           LineHeight="1.4">
+                        <Label.Text>Principle 1 — Perceivable
+  • 1.1.1 Non-text Content — Semantic labels via AutomationProperties
+  • 1.3.1 Info and Relationships — Structured XAML layouts
+  • 1.4.3 Contrast (Minimum) — High contrast mode, 4.5:1 ratio
+  • 1.4.4 Resize Text — Font scaling 0.8× to 2.0×
+
+Principle 2 — Operable
+  • 2.1.1 Keyboard Accessible — All functions via touch/keyboard
+  • 2.3.1 Three Flashes or Below — Reduce animations option
+  • 2.3.3 Animation from Interactions — WCAG 2.3.3 compliant
+  • 2.5.5 Target Size — 44×44pt minimum touch targets
+
+Principle 3 — Understandable
+  • 3.2.1 On Focus — No context change on focus
+  • 3.3.1 Error Identification — Red border + text validation hints
+  • 3.3.2 Labels or Instructions — Required fields marked with *
+
+Principle 4 — Robust
+  • 4.1.2 Name, Role, Value — AutomationProperties on all elements
+  • 4.1.3 Status Messages — Error/success banners with screen reader</Label.Text>
+                    </Label>
                 </VerticalStackLayout>
             </Border>
 

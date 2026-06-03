@@ -44,6 +44,12 @@
             Route="MealPlannerPage" />
 
         <ShellContent
+            Title="Records"
+            Icon="icon_recipes.png"
+            ContentTemplate="{DataTemplate views:MyRecordsPage}"
+            Route="MyRecordsPage" />
+
+        <ShellContent
             Title="Settings"
             Icon="icon_settings.png"
             ContentTemplate="{DataTemplate views:SettingsPage}"

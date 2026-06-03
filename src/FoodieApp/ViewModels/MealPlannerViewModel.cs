@@ -50,6 +50,78 @@ public partial class MealPlannerViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task SpeakDailyNutritionAsync()
+    {
+        if (DailyNutritionTotal == null) return;
+
+        try
+        {
+            var n = DailyNutritionTotal;
+            var text = $"Daily nutrition summary. " +
+                       $"Total calories: {n.Calories:F0}. " +
+                       $"Protein: {n.ProteinGrams:F1} grams. " +
+                       $"Carbohydrates: {n.CarbohydratesGrams:F1} grams. " +
+                       $"Fat: {n.FatGrams:F1} grams. " +
+                       $"Fiber: {n.FiberGrams:F1} grams. " +
+                       $"Sugar: {n.SugarGrams:F1} grams. " +
+                       $"Sodium: {n.SodiumMilligrams:F0} milligrams.";
+
+            await Helpers.TextToSpeechHelper.SpeakAsync(text);
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Text-to-Speech Error",
+                $"Could not speak nutrition: {ex.Message}", "OK");
+        }
+    }
+
+    [RelayCommand]
+    private async Task SelectMealSlotAsync(MealPlan mealPlan)
+    {
+        if (mealPlan == null) return;
+
+        try
+        {
+            var recipeNames = AvailableRecipes.Select(r => r.Name).ToArray();
+            if (recipeNames.Length == 0)
+            {
+                await Shell.Current.DisplayAlert("No Recipes", "Please load the meal plan first.", "OK");
+                return;
+            }
+
+            string selectedName = await Shell.Current.DisplayActionSheet(
+                $"Select recipe for {mealPlan.Type}",
+                "Cancel",
+                null,
+                recipeNames);
+
+            if (string.IsNullOrEmpty(selectedName) || selectedName == "Cancel") return;
+
+            var recipe = AvailableRecipes.FirstOrDefault(r => r.Name == selectedName);
+            if (recipe == null) return;
+
+            var existingMeal = WeeklyPlan.FirstOrDefault(m =>
+                m.Id == mealPlan.Id);
+
+            if (existingMeal != null)
+            {
+                existingMeal.RecipeName = recipe.Name;
+                existingMeal.RecipeId = recipe.Id;
+
+                // Refresh the collection to update the UI
+                var plan = WeeklyPlan.ToList();
+                WeeklyPlan = new ObservableCollection<MealPlan>(plan);
+            }
+
+            CalculateDailyNutrition();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Meal plan error: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
     private async Task AddMealToPlanAsync(Recipe recipe)
     {
         if (recipe == null) return;

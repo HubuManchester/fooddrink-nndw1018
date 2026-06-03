@@ -114,7 +114,7 @@
                                         BackgroundColor="{StaticResource PrimaryLight}"
                                         TextColor="{StaticResource Primary}"
                                         AutomationProperties.Name="Open restaurant in maps"
-                                        AutomationProperties.Hint="Opens the map application with directions to the restaurant" />
+ />
                             </Grid>
                         </Grid>
                     </Border>

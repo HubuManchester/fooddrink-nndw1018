@@ -25,7 +25,7 @@
                 <DatePicker Date="{Binding SelectedDate}"
                             FontSize="16"
                             AutomationProperties.Name="Select date"
-                            AutomationProperties.Hint="Choose a date to plan meals" />
+ />
             </HorizontalStackLayout>
         </Border>
 
@@ -33,9 +33,22 @@
         <Border Grid.Row="1" Style="{StaticResource CardStyle}"
                 IsVisible="{Binding DailyNutritionTotal.Calories, Converter={StaticResource CountToBoolConverter}}">
             <VerticalStackLayout Spacing="8">
-                <Label Text="Daily Nutrition Summary"
-                       FontSize="16"
-                       FontAttributes="Bold" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="Daily Nutrition Summary"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center" />
+                    <Button Grid.Column="1"
+                            Text="🔊"
+                            FontSize="18"
+                            Padding="0"
+                            MinimumWidthRequest="44"
+                            MinimumHeightRequest="44"
+                            BackgroundColor="Transparent"
+                            Command="{Binding SpeakDailyNutritionCommand}"
+                            AutomationProperties.Name="Read daily nutrition aloud" />
+                </Grid>
                 <HorizontalStackLayout Spacing="16">
                     <Label Text="{Binding DailyNutritionTotal.Calories, StringFormat='🔥 {0:F0} cal'}"
                            FontSize="14" />
@@ -50,6 +63,9 @@
         <!-- Weekly Meal Grid -->
         <CollectionView Grid.Row="2"
                         ItemsSource="{Binding WeeklyPlan}"
+                        SelectionMode="Single"
+                        SelectionChangedCommand="{Binding SelectMealSlotCommand}"
+                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}"
                         AutomationProperties.Name="Weekly meal plan">
             <CollectionView.GroupHeaderTemplate>
                 <DataTemplate x:DataType="models:MealPlan">

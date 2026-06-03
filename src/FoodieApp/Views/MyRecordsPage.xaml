@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FoodieApp.ViewModels"
+             xmlns:models="clr-namespace:FoodieApp.Models"
+             xmlns:converters="clr-namespace:FoodieApp.Converters"
+             x:Class="FoodieApp.Views.MyRecordsPage"
+             x:DataType="vm:MyRecordsViewModel"
+             Title="{Binding Title}"
+             AutomationProperties.Name="My food records page">
+
+    <ContentPage.Resources>
+        <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*" Padding="16" RowSpacing="16">
+
+        <!-- Header with Add Button -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0"
+                   Text="My Food Records"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center" />
+            <Button Grid.Column="1"
+                    Text="+ Add"
+                    Command="{Binding NavigateToAddRecordCommand}"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    HeightRequest="40"
+                    FontSize="14"
+                    AutomationProperties.Name="Add new food record"
+                    AutomationProperties.HelpText="Navigate to the form to add a new food or drink record" />
+        </Grid>
+
+        <!-- Loading -->
+        <ActivityIndicator Grid.Row="0"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="{StaticResource Primary}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"
+                           AutomationProperties.Name="Loading records" />
+
+        <!-- Error -->
+        <Border Grid.Row="0"
+                IsVisible="{Binding HasError}"
+                BackgroundColor="{StaticResource ErrorLight}"
+                Style="{StaticResource CardStyle}"
+                AutomationProperties.Name="Error message">
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="{StaticResource Error}"
+                   FontSize="14" />
+        </Border>
+
+        <!-- Records List -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Records}"
+                        SelectionMode="None"
+                        AutomationProperties.Name="Food records list">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     Spacing="16">
+                    <Label Text="📋"
+                           FontSize="56"
+                           HorizontalOptions="Center" />
+                    <Label Text="No records yet"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                    <Label Text="Your food and drink records will appear here.&#10;Tap '+ Add' to create your first record."
+                           FontSize="14"
+                           HorizontalTextAlignment="Center"
+                           TextColor="{StaticResource Gray500}"
+                           HorizontalOptions="Center"
+                           MaximumWidthRequest="280" />
+                    <Button Text="Add Your First Record"
+                            Command="{Binding NavigateToAddRecordCommand}"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            HorizontalOptions="Center"
+                            AutomationProperties.Name="Add first food record"
+                            AutomationProperties.HelpText="Navigate to the form to add your first food or drink record" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:FoodRecord">
+                    <Border Style="{StaticResource CardStyle}" Margin="0,4">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyRecordsViewModel}}, Path=ViewRecordDetailCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="60,*,Auto"
+                              RowDefinitions="Auto,Auto,Auto"
+                              ColumnSpacing="12"
+                              RowSpacing="4"
+                              Padding="10">
+
+                            <!-- Photo or icon -->
+                            <Border Grid.Row="0" Grid.Column="0"
+                                    Grid.RowSpan="3"
+                                    Style="{StaticResource CardStyle}"
+                                    Padding="0"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{StaticResource PrimaryLight}">
+                                <Grid>
+                                    <Image Source="{Binding PhotoFilePath}"
+                                           Aspect="AspectFill"
+                                           IsVisible="{Binding HasPhoto}"
+                                           AutomationProperties.IsInAccessibleTree="False" />
+                                    <Label Text="🍽️"
+                                           FontSize="24"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding HasPhoto, Converter={StaticResource InverseBoolConverter}}" />
+                                </Grid>
+                            </Border>
+
+                            <!-- Name -->
+                            <Label Grid.Row="0" Grid.Column="1"
+                                   Text="{Binding Name}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   LineBreakMode="TailTruncation" />
+
+                            <!-- Category + Date -->
+                            <HorizontalStackLayout Grid.Row="1" Grid.Column="1"
+                                                   Spacing="8">
+                                <Border Style="{StaticResource ChipStyle}"
+                                        BackgroundColor="{StaticResource PrimaryLight}">
+                                    <Label Text="{Binding Category}"
+                                           FontSize="11"
+                                           TextColor="{StaticResource Primary}" />
+                                </Border>
+                                <Label Text="{Binding CreatedAt, StringFormat='{0:yyyy-MM-dd}'}"
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                            <!-- Nutrition quick info -->
+                            <HorizontalStackLayout Grid.Row="2" Grid.Column="1"
+                                                   Spacing="12">
+                                <Label Text="{Binding Nutrition.Calories, StringFormat='🔥 {0:F0}'}"
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}" />
+                                <Label Text="{Binding Nutrition.ProteinGrams, StringFormat='🥩 {0:F1}g'}"
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}" />
+                                <Label Text="{Binding Nutrition.FatGrams, StringFormat='🧈 {0:F1}g'}"
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}" />
+                            </HorizontalStackLayout>
+
+                            <!-- Delete + Location indicator -->
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="2"
+                                                 Grid.RowSpan="3"
+                                                 VerticalOptions="Center"
+                                                 Spacing="8">
+                                <Button Text="🗑️"
+                                        FontSize="18"
+                                        Padding="0"
+                                        MinimumWidthRequest="40"
+                                        MinimumHeightRequest="40"
+                                        BackgroundColor="Transparent"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MyRecordsViewModel}}, Path=DeleteRecordCommand}"
+                                        CommandParameter="{Binding .}"
+                                        AutomationProperties.Name="Delete record"
+                                        AutomationProperties.HelpText="Delete this food record" />
+                                <Label Text="📍"
+                                       FontSize="16"
+                                       HorizontalOptions="Center"
+                                       IsVisible="{Binding HasLocation}"
+                                       AutomationProperties.IsInAccessibleTree="False" />
+                            </VerticalStackLayout>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>

@@ -3,10 +3,12 @@ namespace FoodieApp.ViewModels;
 public partial class BarcodeScanViewModel : BaseViewModel
 {
     private readonly INutritionService _nutritionService;
+    private readonly ISettingsService _settingsService;
 
-    public BarcodeScanViewModel(INutritionService nutritionService)
+    public BarcodeScanViewModel(INutritionService nutritionService, ISettingsService settingsService)
     {
         _nutritionService = nutritionService;
+        _settingsService = settingsService;
         Title = "Barcode Scanner";
     }
 
@@ -30,13 +32,40 @@ public partial class BarcodeScanViewModel : BaseViewModel
     {
         try
         {
+#if WINDOWS
+            // On Windows, check if MediaCapture is available first
+            var mediaCapture = new Windows.Media.Capture.MediaCapture();
+            try
+            {
+                await mediaCapture.InitializeAsync();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                SetError("Camera access is blocked by Windows. Please enable 'Let desktop apps access your camera' in Windows Settings > Privacy & Security > Camera.");
+                return;
+            }
+            catch (Exception mediaEx) when (mediaEx.Message.Contains("camera", StringComparison.OrdinalIgnoreCase))
+            {
+                SetError($"Cannot access camera. Make sure a camera is connected and Windows privacy settings allow camera access.\n\nDetails: {mediaEx.Message}");
+                return;
+            }
+            finally
+            {
+                mediaCapture.Dispose();
+            }
+#endif
+
             var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
             if (status != PermissionStatus.Granted)
             {
                 status = await Permissions.RequestAsync<Permissions.Camera>();
                 if (status != PermissionStatus.Granted)
                 {
+#if WINDOWS
+                    SetError("Camera permission denied. Please enable 'Camera access' for this app in Windows Settings > Privacy & Security > Camera.");
+#else
                     SetError(Constants.ErrorMessages.CameraPermissionDenied);
+#endif
                     return;
                 }
             }
@@ -90,6 +119,9 @@ public partial class BarcodeScanViewModel : BaseViewModel
             var product = await _nutritionService.GetProductByBarcodeAsync(barcode);
             ScannedProduct = product;
             HasScanned = true;
+
+            if (product != null && !_settingsService.ReduceAnimations)
+                HapticFeedbackHelper.PerformClick();
 
             if (product == null)
             {

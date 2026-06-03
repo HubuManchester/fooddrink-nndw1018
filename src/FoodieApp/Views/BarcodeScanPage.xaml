@@ -74,7 +74,7 @@
                         <Label Text="Or Enter Barcode Manually"
                                FontSize="16"
                                FontAttributes="Bold"
-                               AutomationProperties.HeadingLevel="Level2" />
+ />
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                             <Entry Grid.Column="0"
                                    Text="{Binding ManualBarcode}"
@@ -83,7 +83,7 @@
                                    ReturnType="Search"
                                    ReturnCommand="{Binding LookupManualBarcodeCommand}"
                                    AutomationProperties.Name="Manual barcode input"
-                                   AutomationProperties.Hint="Type a barcode number to look up product information" />
+ />
                             <Button Grid.Column="1"
                                     Text="Lookup"
                                     Command="{Binding LookupManualBarcodeCommand}"
@@ -112,7 +112,7 @@
                             <Label Text="Product Information"
                                    FontSize="18"
                                    FontAttributes="Bold"
-                                   AutomationProperties.HeadingLevel="Level2" />
+ />
                             <Button Grid.Column="1"
                                     Text="Clear"
                                     Command="{Binding ClearResultCommand}"

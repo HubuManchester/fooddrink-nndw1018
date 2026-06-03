@@ -43,33 +43,39 @@
             </Border>
 
             <!-- Recipe Name and Actions -->
-            <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
+            <Grid ColumnDefinitions="*,50,50,50" ColumnSpacing="4">
                 <Label Grid.Column="0"
                        Text="{Binding Recipe.Name}"
                        FontSize="26"
                        FontAttributes="Bold"
-                       VerticalOptions="Center"
-                       AutomationProperties.HeadingLevel="Level1" />
-                <ImageButton Grid.Column="1"
-                             Source="icon_heart.png"
-                             WidthRequest="44"
-                             HeightRequest="44"
-                             Command="{Binding ToggleFavouriteCommand}"
-                             AutomationProperties.Name="Toggle favourite" />
-                <ImageButton Grid.Column="2"
-                             Source="icon_share.png"
-                             WidthRequest="44"
-                             HeightRequest="44"
-                             Command="{Binding ShareRecipeCommand}"
-                             AutomationProperties.Name="Share recipe"
-                             AutomationProperties.Hint="Share this recipe with others" />
-                <ImageButton Grid.Column="3"
-                             Source="icon_speak.png"
-                             WidthRequest="44"
-                             HeightRequest="44"
-                             Command="{Binding SpeakRecipeCommand}"
-                             AutomationProperties.Name="Read recipe aloud"
-                             AutomationProperties.Hint="Use text to speech to read the recipe instructions" />
+                       VerticalOptions="Center" />
+                <Button Grid.Column="1"
+                        Text="❤️"
+                        FontSize="20"
+                        Padding="0"
+                        MinimumWidthRequest="50"
+                        MinimumHeightRequest="50"
+                        BackgroundColor="Transparent"
+                        Command="{Binding ToggleFavouriteCommand}"
+                        AutomationProperties.Name="Toggle favourite" />
+                <Button Grid.Column="2"
+                        Text="↗️"
+                        FontSize="20"
+                        Padding="0"
+                        MinimumWidthRequest="50"
+                        MinimumHeightRequest="50"
+                        BackgroundColor="Transparent"
+                        Command="{Binding ShareRecipeCommand}"
+                        AutomationProperties.Name="Share recipe" />
+                <Button Grid.Column="3"
+                        Text="{Binding SpeakButtonText}"
+                        FontSize="20"
+                        Padding="0"
+                        MinimumWidthRequest="50"
+                        MinimumHeightRequest="50"
+                        BackgroundColor="Transparent"
+                        Command="{Binding SpeakRecipeCommand}"
+                        AutomationProperties.Name="Read recipe aloud" />
             </Grid>
 
             <!-- Quick Info Chips -->
@@ -96,7 +102,7 @@
                     <Label Text="Description"
                            FontSize="18"
                            FontAttributes="Bold"
-                           AutomationProperties.HeadingLevel="Level2" />
+ />
                     <Label Text="{Binding Recipe.Description}"
                            FontSize="15"
                            LineHeight="1.4"
@@ -118,7 +124,7 @@
                            FontSize="16"
                            HorizontalTextAlignment="Center"
                            AutomationProperties.Name="Number of servings"
-                           AutomationProperties.Hint="Enter desired number of servings" />
+ />
                     <Button Grid.Column="2"
                             Text="-"
                             WidthRequest="44"
@@ -146,7 +152,7 @@
                     <Label Text="Ingredients"
                            FontSize="18"
                            FontAttributes="Bold"
-                           AutomationProperties.HeadingLevel="Level2" />
+ />
                     <CollectionView ItemsSource="{Binding Recipe.Ingredients}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
@@ -171,7 +177,7 @@
                     <Label Text="Instructions"
                            FontSize="18"
                            FontAttributes="Bold"
-                           AutomationProperties.HeadingLevel="Level2" />
+ />
                     <CollectionView ItemsSource="{Binding Recipe.Instructions}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
@@ -202,10 +208,22 @@
             <!-- Nutrition Info -->
             <Border Style="{StaticResource CardStyle}">
                 <VerticalStackLayout Spacing="8">
-                    <Label Text="Nutrition (per serving)"
-                           FontSize="18"
-                           FontAttributes="Bold"
-                           AutomationProperties.HeadingLevel="Level2" />
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Text="Nutrition (per serving)"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center" />
+                        <Button Grid.Column="1"
+                                Text="{Binding SpeakButtonText}"
+                                FontSize="20"
+                                Padding="0"
+                                MinimumWidthRequest="44"
+                                MinimumHeightRequest="44"
+                                BackgroundColor="Transparent"
+                                Command="{Binding SpeakNutritionCommand}"
+                                AutomationProperties.Name="Read nutrition information aloud" />
+                    </Grid>
                     <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="12">
                         <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource NutritionCardStyle}">
                             <VerticalStackLayout HorizontalOptions="Center" Spacing="4">

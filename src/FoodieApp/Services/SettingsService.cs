@@ -69,6 +69,14 @@ public class SettingsService : ISettingsService
             if (Application.Current != null)
             {
                 Application.Current.UserAppTheme = _isDarkMode ? AppTheme.Dark : AppTheme.Light;
+
+                // Apply font scale to dynamic resources — all labels/styles
+                // using {DynamicResource XXFontSize} will update automatically
+                Application.Current.Resources["BaseFontSize"] = 14.0 * _fontScale;
+                Application.Current.Resources["SmallFontSize"] = 12.0 * _fontScale;
+                Application.Current.Resources["MediumFontSize"] = 16.0 * _fontScale;
+                Application.Current.Resources["LargeFontSize"] = 20.0 * _fontScale;
+                Application.Current.Resources["TitleFontSize"] = 26.0 * _fontScale;
             }
         }
         catch (Exception ex)

@@ -1,4 +1,8 @@
 is_global = true
+build_property.EnableAotAnalyzer = 
+build_property.EnableSingleFileAnalyzer = true
+build_property.EnableTrimAnalyzer = false
+build_property.IncludeAllContentForSelfExtract = 
 build_property.TargetFramework = net8.0-android
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = 
@@ -8,8 +12,90 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = FoodieApp
-build_property.ProjectDir = C:\Users\闹闹\Desktop\move\FoodieApp\src\FoodieApp\
+build_property.ProjectDir = D:\move\FoodieApp\src\FoodieApp\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
-build_property.EffectiveAnalysisLevelStyle = 8.0
-build_property.EnableCodeStyleSeverity = 
+
+[D:/move/FoodieApp/src/FoodieApp/App.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.App.xaml
+build_metadata.AdditionalFiles.TargetPath = App.xaml
+build_metadata.AdditionalFiles.RelativePath = App.xaml
+
+[D:/move/FoodieApp/src/FoodieApp/AppShell.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.AppShell.xaml
+build_metadata.AdditionalFiles.TargetPath = AppShell.xaml
+build_metadata.AdditionalFiles.RelativePath = AppShell.xaml
+
+[D:/move/FoodieApp/src/FoodieApp/Resources/Styles/AccessibilityStyles.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.Resources.Styles.AccessibilityStyles.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\AccessibilityStyles.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\AccessibilityStyles.xaml
+
+[D:/move/FoodieApp/src/FoodieApp/Resources/Styles/Colors.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.Resources.Styles.Colors.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Colors.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Colors.xaml
+
+[D:/move/FoodieApp/src/FoodieApp/Resources/Styles/Styles.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.Resources.Styles.Styles.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Styles.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Styles.xaml
+
+[D:/move/FoodieApp/src/FoodieApp/Views/AddFoodRecordPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.Views.AddFoodRecordPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\AddFoodRecordPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\AddFoodRecordPage.xaml
+
+[D:/move/FoodieApp/src/FoodieApp/Views/BarcodeScanPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.Views.BarcodeScanPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\BarcodeScanPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\BarcodeScanPage.xaml
+
+[D:/move/FoodieApp/src/FoodieApp/Views/MainPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.Views.MainPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\MainPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\MainPage.xaml
+
+[D:/move/FoodieApp/src/FoodieApp/Views/MealPlannerPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.Views.MealPlannerPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\MealPlannerPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\MealPlannerPage.xaml
+
+[D:/move/FoodieApp/src/FoodieApp/Views/MyRecordsPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.Views.MyRecordsPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\MyRecordsPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\MyRecordsPage.xaml
+
+[D:/move/FoodieApp/src/FoodieApp/Views/RecipeDetailPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.Views.RecipeDetailPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\RecipeDetailPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\RecipeDetailPage.xaml
+
+[D:/move/FoodieApp/src/FoodieApp/Views/RecipeListPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.Views.RecipeListPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\RecipeListPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\RecipeListPage.xaml
+
+[D:/move/FoodieApp/src/FoodieApp/Views/RestaurantFinderPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.Views.RestaurantFinderPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\RestaurantFinderPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\RestaurantFinderPage.xaml
+
+[D:/move/FoodieApp/src/FoodieApp/Views/SettingsPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = FoodieApp.Views.SettingsPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\SettingsPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\SettingsPage.xaml
